@@ -1,60 +1,48 @@
 const computerChoices = ["rock", "paper", "scissor"];
 
-let computerSelect;
-//  = computerChoices[Math.floor(Math.random() * 3)];
-let playerSelect;
-// = prompt("paper, scissor or rock ? Pick One").toLowerCase();
+let computerScore;
+let playerScore;
 
-let computerScore = 0;
-let playerScore = 0;
-function playSingleRound(playerSelection, computerSelection) {
-  if (
-    playerSelection != "paper" &&
-    playerSelection != "rock" &&
-    playerSelection != "scissor"
-  ) {
-    alert("Invalid Input!");
-  } else if (computerSelection == playerSelection) {
-    alert("U tied!");
-  } else if (computerSelection == "rock" && playerSelection == "paper") {
-    playerScore++;
-    alert("U win!");
-  } else if (computerSelection == "rock" && playerSelection == "scissor") {
-    computerScore++;
-    alert("U lose!");
-  } else if (computerSelection == "paper" && playerSelection == "scissor") {
-    playerScore++;
-    alert("u Win!");
-  } else if (computerSelection == "paper" && playerSelection == "rock") {
-    computerScore++;
-    alert("U lose!");
-  } else if (computerSelection == "scissor" && playerSelection == "paper") {
-    computerScore++;
-    alert("U lose !");
-  } else if (computerSelection == "scissor" && playerSelection == "rock") {
-    playerScore++;
-    alert("U win!");
+function game(playerSelection, computerSelection) {
+  console.log(playerSelection, computerSelection);
+
+  let showPlayerSelection = document.createElement("p");
+  showPlayerSelection.textContent = `You chose ${playerSelection}`;
+
+  let showComputerSelection = document.createElement("p");
+  showComputerSelection.textContent = `Computer chose ${computerSelection}`;
+
+  instructionsArea.innerText = "";
+  instructionsArea.append(showPlayerSelection, showComputerSelection);
+
+  if (playerSelection === computerSelection) {
+    showComputerSelection.insertAdjacentElement(
+      "afterend",
+      document.createElement("h2")
+    ).textContent = "It's a tie";
   }
-
-  return [playerScore, computerScore];
 }
 
-// game function to run the previous playSingleRound 5 times, and return the computer score and player score after 5 times, and based on the result, determine the final winner.
+const display = document.querySelector(".display");
+const btn = document.querySelector("button");
+const instructionsArea = document.createElement("div");
+const choices = document.querySelectorAll(".gesture");
 
-function game() {
-  for (let i = 0; i < 5; i++) {
-    computerSelect = computerChoices[Math.floor(Math.random() * 3)];
-    playerSelect = prompt("paper, scissor or rock ? Pick One").toLowerCase();
-    playSingleRound(playerSelect, computerSelect);
-  }
+btn.addEventListener("click", addInstructions);
 
-  const Result = [playerScore, computerScore];
-  console.log(Result);
+function addInstructions() {
+  const h2 = document.createElement("h2");
+  h2.textContent = "Pick one above";
+  instructionsArea.appendChild(h2);
+  display.insertAdjacentElement("afterend", instructionsArea);
+  btn.removeEventListener("click", addInstructions);
 
-  if (Result[0] > Result[1]) {
-    alert("u win! yeah");
-  } else if (Result[0] < Result[1]) alert("U lose, no!");
-  alert("tied!!!");
+  choices.forEach((choice) => {
+    choice.addEventListener("click", (e) => {
+      h2.remove();
+      playerSelect = e.currentTarget.id;
+      computerSelect = computerChoices[Math.floor(Math.random() * 3)];
+      game(playerSelect, computerSelect);
+    });
+  });
 }
-
-game();
